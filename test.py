@@ -43,22 +43,43 @@ class OnOffLed:
     def turn_off(self):
         g.output(self.channel, g.LOW)
 
-led = OnOffLed(15)
+
+class DimmableLed:
+    channel = None
+    pwm = None
+    freq = 100
+
+    def __init__(self, channel):
+        self.channel = channel
+        g.setup(self.channel, g.OUT)
+
+        self.pwm = g.PWM(self.channel, self.freq)
+
+    def set_brightness(self, bri):  # bri out of 100
+        self.pwm.ChangeDutyCycle(bri)
+
+    def start(self):
+        self.pwm.start(100)
+
+
+led = DimmableLed(15)
 se = Servo(14)
 
 try:
-    led.turn_on()
+    led.start()
     se.start()
-    sleep(5)
 
     while True:
-        led.turn_off()
-        se.set_position(90)
-        sleep(5)
+        for i in xrange(0, 101):
+            led.set_brightness(i)
+            se.set_position(i)
+            sleep(0.1)
+        sleep(1)
+        for i in xrange(100, -1, -1):
+            led.set_brightness(i)
+            se.set_position(i)
+            sleep(0.1)
 
-        led.turn_on()
-        se.set_position(10)
-        sleep(5)
 except KeyboardInterrupt:
     pass  # proceed to exit code
 
