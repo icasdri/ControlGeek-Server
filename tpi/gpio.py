@@ -26,6 +26,9 @@ class Servo:
         assert 0 <= pos <= 1000
         g.set_servo_pulsewidth(self.channel, 1000 + pos)
 
+    def start(self):
+        self.set_pos(0)
+
     def stop(self):
         g.set_servo_pulsewidth(self.channel, 0)
 
@@ -42,6 +45,9 @@ class DimmableLed:
     def set_bri(self, bri):  # bri 0 to 1000
         assert 0 <= bri <= 1000
         g.set_PWM_dutycycle(self.channel, bri)
+
+    def start(self):
+        self.set_bri(1000)
 
 
 def main():

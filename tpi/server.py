@@ -5,6 +5,9 @@ import tornado.web
 import tornado.websocket
 import gpio
 
+gpio_servo = None
+gpio_led = None
+
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -20,9 +23,11 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             if message[0] == 's':
                 val = message[1:]
                 print("Servo: " + val)
+                gpio_servo.set_pos(int(val))
             elif message[0] == 'l':
                 val = message[1:]
                 print("LED: " + val)
+                gpio_led.set_bri(int(val))
             else:
                 print("UNRECOGNIZED MESSAGE: " + message)
 
@@ -44,5 +49,11 @@ def make_app():
 if __name__ == "__main__":
     app = make_app()
     app.listen(9877)
+
     gpio.init()
+    gpio_servo = gpio.Servo(14)
+    gpio_led = gpio.DimmableLed(15)
+    gpio_led.start()
+    gpio_servo.start()
+
     tornado.ioloop.IOLoop.current().start()
