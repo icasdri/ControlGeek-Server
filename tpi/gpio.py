@@ -22,12 +22,10 @@ class GpioGeneral:
         self.channel = channel
 
     def inc_val(self, val):
-        self.val += val
-        self.set_val(self.val)
+        self.set_val(self.val + val)
 
     def dec_val(self, val):
-        self.val -= val
-        self.set_val(self.val)
+        self.set_val(self.val - val)
 
     def set_val(self, inp):
         if inp <= 0:
@@ -35,6 +33,7 @@ class GpioGeneral:
         elif inp >= 1000:
             inp = 1000
 
+        self.val = inp
         self.set_raw_val(inp)
 
 

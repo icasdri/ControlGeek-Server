@@ -19,6 +19,7 @@ function Target(config_t) {
     this.slider.setAttribute('id', self.prefix + '_slider');
     this.slider.setAttribute('min', 0);
     this.slider.setAttribute('max', 1000);
+    this.slider.setAttribute('step', 5);
     this.slider.setAttribute('value', self.orig_value);
 
     this.label = document.createElement('label');
