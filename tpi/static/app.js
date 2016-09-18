@@ -39,8 +39,8 @@ function Target(config_t) {
     this.label.setAttribute('step', 10);
 
     this.updateValue = function(val) {
-        this.slider.setAttribute('value', val);
-        this.label.innerHTML = this.name + ': ' + val;
+        self.slider.value = val;
+        self.label.innerHTML = self.name + ': ' + val;
     }
 
     this.label.innerHTML = this.name + ': ' + this.slider.value;
