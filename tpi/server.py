@@ -2,12 +2,24 @@
 
 import tornado.ioloop
 import tornado.web
+import tornado.websocket
 import gpio
 
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("static/index.html")
+
+
+class WebSocketHandler(tornado.websocket.WebSocketHandler):
+    def open(self):
+        print("WebSocket opened")
+
+    def on_message(self, message):
+        print("Received: " + message)
+
+    def on_close(self):
+        print("WebSocket closed")
 
 
 def make_app():
@@ -18,6 +30,7 @@ def make_app():
 
     return tornado.web.Application([
         (r"/", MainHandler),
+        (r"/sock", WebSocketHandler),
     ], **settings)
 
 if __name__ == "__main__":
