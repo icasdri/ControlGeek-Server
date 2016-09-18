@@ -1,0 +1,12 @@
+[Unit]
+Description=Web service for ControlGeek allowing for HTML and WebSockets interface to GPIO
+Requires=pigpiod.service
+
+[Service]
+Type=simple
+User=pi
+ExecStart=/usr/bin/python2 /home/pi/controlgeek/server.py
+WorkingDirectory=/home/pi/controlgeek
+
+[Install]
+WantedBy=multi-user.target
