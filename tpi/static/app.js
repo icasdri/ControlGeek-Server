@@ -4,9 +4,20 @@ setTimeout(function() {
     document.body.appendChild(v);
 }, 100);
 
-var socket = new WebSocket('ws://18.22.7.180:9877/sock');
-var form = document.getElementById('slider_form');
 var targets = {};
+var socket = new WebSocket('ws://18.22.7.180:9877/sock');
+socket.onmessage = function(message) {
+    var m = message.data;
+    console.log('-- receiving message: ' + m);
+    if (m.length >= 2) {
+        var p = m[0];
+        if (targets.hasOwnProperty(p)) {
+            targets[p].updateValue(m.substring(1));
+        }
+    }
+}
+
+var form = document.getElementById('slider_form');
 
 function Target(config_t) {
     var self = this;
@@ -26,6 +37,11 @@ function Target(config_t) {
     this.label.setAttribute('id', self.prefix + '_label');
     this.label.setAttribute('for', self.prefix + '_slider');
     this.label.setAttribute('step', 10);
+
+    this.updateValue = function(val) {
+        this.slider.setAttribute('value', val);
+        this.label.innerHTML = this.name + ': ' + val;
+    }
 
     this.label.innerHTML = this.name + ': ' + this.slider.value;
 

@@ -1,5 +1,6 @@
 #!/usr/bin/python2
 
+import threading
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
@@ -28,9 +29,28 @@ class MainHandler(tornado.web.RequestHandler):
         self.render('static/index.html')
 
 
+socket_counter_lock = threading.Lock()
+open_sockets = {}
+socket_counter = 0
+
+
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
+        global socket_counter
+        with socket_counter_lock:
+            self.socket_counter_id = socket_counter
+            open_sockets[socket_counter] = self
+            socket_counter += 1
+
         print('WebSocket opened')
+
+    def _send_gpio_val(self, tp, message):
+        if message[1] == '+':
+            return tp.inc_val(int(message[2:]))
+        elif message[1] == '-':
+            return tp.dec_val(int(message[2:]))
+        else:
+            return tp.set_val(int(message[1:]))
 
     def on_message(self, message):
         if len(message) >= 2:
@@ -38,16 +58,18 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             if p in targets:
                 tp = targets[p]
                 print(tp.name + ': ' + message[1:])
-                if message[1] == '+':
-                    tp.inc_val(int(message[2:]))
-                elif message[1] == '-':
-                    tp.dec_val(int(message[2:]))
-                else:
-                    tp.set_val(int(message[1:]))
+                val = self._send_gpio_val(tp, message)
+                for s in filter(lambda i: i != self.socket_counter_id,
+                                open_sockets):
+                    print('-- delivering message: ' + p + str(val))
+                    open_sockets[s].write_message(p + str(val))
             else:
                 print('UNRECOGNIZED: ' + message)
 
     def on_close(self):
+        with socket_counter_lock:
+            del open_sockets[self.socket_counter_id]
+
         print('WebSocket closed')
 
 
