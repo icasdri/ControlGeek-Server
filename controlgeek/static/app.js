@@ -1,9 +1,3 @@
-setTimeout(function() {
-    v = document.createElement('p');
-    v.innerHTML = 'Javascript is running';
-    document.body.appendChild(v);
-}, 100);
-
 var targets = {};
 var socket = new WebSocket('ws://18.22.7.180:9877/sock');
 socket.onmessage = function(message) {

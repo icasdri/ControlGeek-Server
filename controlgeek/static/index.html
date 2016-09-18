@@ -1,9 +1,62 @@
 <html>
 <head>
-    <title>TPi</title>
+    <title>ControlGeek</title>
+<style>
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('static/NotoSans-Regular.ttf') format('truetype');
+}
+h1 {
+    font-family: 'Noto Sans', Helvetica, sans-serif;
+    color: #222222;
+}
+body {
+    max-width: 500px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.centered {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+.logo {
+    max-width: 112px;
+    max-height: 112px;
+}
+input[type=range] {
+  -webkit-appearance: none;
+  margin: 18px 0;
+  width: 100%;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 2px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: #E5E5E5;
+  border-radius: 0.9px;
+}
+input[type=range]::-webkit-slider-thumb {
+  height: 22px;
+  width: 22px;
+  border-radius: 11px;
+  background: #FFFFFF;
+  cursor: pointer;
+  border: 0.8px solid #AAAAAA;
+  -webkit-appearance: none;
+  margin-top: -11px;
+}
+</style>
 </head>
 <body>
-    <p>This is a test.</p>
+    <img class="logo centered" src="static/ControlGeek.svg" alt="ControlGeek logo">
+    <h1 class="centered">ControlGeek</h1>
     <form id="slider_form"></form>
     <script src="static/app.js"></script>
 </body>
