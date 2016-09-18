@@ -16,7 +16,15 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         print("WebSocket opened")
 
     def on_message(self, message):
-        print("Received: " + message)
+        if len(message) >= 2:
+            if message[0] == 's':
+                val = message[1:]
+                print("Servo: " + val)
+            elif message[0] == 'l':
+                val = message[1:]
+                print("LED: " + val)
+            else:
+                print("UNRECOGNIZED MESSAGE: " + message)
 
     def on_close(self):
         print("WebSocket closed")
