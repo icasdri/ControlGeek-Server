@@ -1,0 +1,44 @@
+[
+    {
+        "name": "Turquoise Servo",
+        "prefix": "t",
+        "value": 0,
+        "pin": 14,
+        "cls": "Servo"
+    },
+    {
+        "name": "Blue Servo",
+        "prefix": "s",
+        "value": 0,
+        "pin": 27,
+        "cls": "Servo"
+    },
+    {
+        "name": "Circle Servo",
+        "prefix": "c",
+        "value": 0,
+        "pin": 23,
+        "cls": "Servo"
+    },
+    {
+        "name": "Yellow LED",
+        "prefix": "y",
+        "value": 1000,
+        "pin": 15,
+        "cls": "DimmableLed"
+    },
+    {
+        "name": "Red LED",
+        "prefix": "r",
+        "value": 1000,
+        "pin": 18,
+        "cls": "DimmableLed"
+    },
+    {
+        "name": "Green LED",
+        "prefix": "g",
+        "value": 1000,
+        "pin": 17,
+        "cls": "DimmableLed"
+    }
+]

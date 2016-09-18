@@ -1,7 +1,6 @@
 #!/usr/bin/python2
 
 import pigpio
-from time import sleep
 
 g = None
 
@@ -15,59 +14,56 @@ def finish():
     g.stop()
 
 
-class Servo:
+class GpioGeneral:
     channel = None
+    val = 0
 
     def __init__(self, channel):
         self.channel = channel
+
+    def inc_val(self, val):
+        self.val += val
+        self.set_val(self.val)
+
+    def dec_val(self, val):
+        self.val -= val
+        self.set_val(self.val)
+
+    def set_val(self, inp):
+        if inp <= 0:
+            inp = 0
+        elif inp >= 1000:
+            inp = 1000
+
+        self.set_raw_val(inp)
+
+
+class Servo(GpioGeneral):
+    def __init__(self, channel):
+        GpioGeneral.__init__(self, channel)
         g.set_mode(self.channel, pigpio.OUTPUT)
 
-    def set_pos(self, pos):  # pos 0 to 1000
+    def set_raw_val(self, pos):  # pos 0 to 1000
         assert 0 <= pos <= 1000
         g.set_servo_pulsewidth(self.channel, 1000 + pos)
 
     def start(self):
-        self.set_pos(0)
+        self.set_val(0)
 
     def stop(self):
         g.set_servo_pulsewidth(self.channel, 0)
 
 
-class DimmableLed:
-    channel = None
-
+class DimmableLed(GpioGeneral):
     def __init__(self, channel):
-        self.channel = channel
+        GpioGeneral.__init__(self, channel)
         g.set_mode(self.channel, pigpio.OUTPUT)
         g.set_PWM_range(self.channel, 1000)
         g.set_PWM_frequency(self.channel, 100)
 
-    def set_bri(self, bri):  # bri 0 to 1000
+    def set_raw_val(self, bri):  # bri 0 to 1000
         assert 0 <= bri <= 1000
         g.set_PWM_dutycycle(self.channel, bri)
 
     def start(self):
-        self.set_bri(1000)
-
-
-def main():
-    init()
-    se = Servo(14)
-    led = DimmableLed(15)
-
-    try:
-        while True:
-            for i in xrange(0, 1001):
-                se.set_pos(i)
-                led.set_bri(i)
-                sleep(0.05)
-            sleep(2)
-            for i in xrange(1000, -1, -1):
-                se.set_pos(i)
-                led.set_bri(i)
-                sleep(0.05)
-            sleep(2)
-    except KeyboardInterrupt:
-        pass  # proceed to exit
-
-    finish()
+        self.set_val(1000)
