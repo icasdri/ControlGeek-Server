@@ -8,7 +8,6 @@ var targets = {};
 var socket = new WebSocket('ws://18.22.7.180:9877/sock');
 socket.onmessage = function(message) {
     var m = message.data;
-    console.log('-- receiving message: ' + m);
     if (m.length >= 2) {
         var p = m[0];
         if (targets.hasOwnProperty(p)) {

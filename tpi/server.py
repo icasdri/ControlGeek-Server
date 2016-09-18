@@ -42,6 +42,9 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             open_sockets[socket_counter] = self
             socket_counter += 1
 
+        for k, v in targets.items():
+            self.write_message(k + str(v.val))
+
         print('WebSocket opened')
 
     def _send_gpio_val(self, tp, message):
@@ -61,7 +64,6 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
                 val = self._send_gpio_val(tp, message)
                 for s in filter(lambda i: i != self.socket_counter_id,
                                 open_sockets):
-                    print('-- delivering message: ' + p + str(val))
                     open_sockets[s].write_message(p + str(val))
             else:
                 print('UNRECOGNIZED: ' + message)
